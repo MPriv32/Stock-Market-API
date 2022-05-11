@@ -30,20 +30,27 @@ def __send_email(stock_data: str) -> None:
     server.sendmail(mail_from, mail_to, mail_message)
     server.close()
 
-def handler(event, context):
+class api_data:
     response = requests.get(url.format(
         stock=os.getenv('stock'),
         API_key=os.getenv('API_key')
     ))
 
     data = response.json()
+    ticker = data['symbol']
+    daily_high = data['high']
+    daily_low = data['low']
+    daily_close = data['close']
+
+def __email_body():
+
     stock_data = (
-        "For the stock: " + str(data['symbol']) +
-        "\nToday's high was $" + str(data['high']) +
-        "\nToday's low was $" + str(data['low']) + "\n" + 
-        str(data['symbol']) +  " closed at $" + str(data['close'])
+        f"""For the stock: {api_data.ticker}
+        \nToday's high was {api_data.daily_high}
+        \nToday's low was $ {api_data.daily_low} 
+        \n{api_data.ticker} closed at $ {api_data.daily_close}"""
     )
 
     __send_email(stock_data)
 
-handler(None, None)
+__email_body()

@@ -1,33 +1,17 @@
 import boto3
-import os
-import requests
-
-
-url = (
-    'https://api.polygon.io/v1/open-close/{stock}/2020-10-14?adjusted=true&apiKey={API_key}'
-)
-
-if os.path.isfile('.env'):
-    from dotenv import load_dotenv
-    load_dotenv()
-
-response = requests.get(url.format(
-    stock=os.getenv('stock'),
-    API_key=os.getenv('API_key')
-))
+import app
 
 #Pulling stock name and daily price from API
-data = response.json()
-stock_name = str(data['symbol'])
-price = str(data['close'])
+stock_name = str(app.api_data.ticker)
+stock_price = str(app.api_data.daily_close)
 
+#DynamoDB table name
 table_name = "stock_tracker"
-
 dynamodb_client = boto3.client('dynamodb')
 
 stock_info ={
     'Company': {'S': stock_name}
-    ,'DailyPrice': {'S': price}
+    ,'DailyPrice': {'S': stock_price}
 }
 
 print(stock_info)
