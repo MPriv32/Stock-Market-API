@@ -3,8 +3,11 @@ import smtplib
 import os
 import requests
 
+today_date = {datetime.today().strftime("%Y-%m-%d")}
+
+
 url = (
-    'https://api.polygon.io/v1/open-close/AAPL/2020-10-14?adjusted=true&apiKey={API_key}'
+    'https://api.polygon.io/v1/open-close/{stock}/2022-05-10?adjusted=true&apiKey={API_key}'
 )
 
 if os.path.isfile('.env'):
@@ -29,6 +32,7 @@ def __send_email(stock_data: str) -> None:
 
 def handler(event, context):
     response = requests.get(url.format(
+        stock=os.getenv('stock'),
         API_key=os.getenv('API_key')
     ))
 
