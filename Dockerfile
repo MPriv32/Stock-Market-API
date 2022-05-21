@@ -1,0 +1,15 @@
+FROM python:3.8
+
+COPY app.py .
+
+RUN pip install requests python-dotenv
+
+ARG API_KEY
+ARG EMAIL_USER
+ARG EMAIL_PASSWORD
+
+ENV API_KEY $_API_KEY
+ENV EMAIL_USER $EMAIL_USER
+ENV EMAIL_PASSWORD $EMAIL_PASSWORD
+
+CMD ["python", "app.py"]
